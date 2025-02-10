@@ -66,19 +66,7 @@ def find_profile_intersection(profile, target, N):
             pos = idx
     return pos
 
-def calc_npintensity(parser):
-    args=parser.parse_args()
-    inpath=args.inpath
-    outpath=args.outpath
-    fname=args.fname
-    ftype=args.ftype
-    calc_center=args.calc_center
-    output_radius=args.output_radius
-    fillhole=args.fillhole
-    runfilt=args.runfilt
-    get_histogram=args.get_histogram
-    runint=args.runint
-    runphys=args.runphys
+def calc_npintensity(fname,inpath,outpath,ftype,calc_center,output_radius,fillhole,runfilt,get_histogram,runint,runphys):
     
     os.makedirs(outpath,exist_ok=True)
     pic_filename = f'{inpath}/{fname}.{ftype}'
@@ -471,23 +459,16 @@ def calc_npintensity(parser):
         histsave=np.hstack((histsave,hist.reshape(-1,1)))
         np.savetxt(f"{outpath}/{fname}_histogram.csv",histsave,delimiter=",",header="Bin, Normalized Bin, Frequency")
 
-def main():
-    parser = argparse.ArgumentParser(description="Get user input.")
+fname='01_03'
+inpath=r'C:\Users\supervisor\Documents\quantSTEM_blee2\quantSTEM\test_input'
+outpath=r'C:\Users\supervisor\Documents\quantSTEM_blee2\quantSTEM\test_GMS_output'
+ftype='dm3'
+calc_center=True
+output_radius=True
+fillhole=True
+runfilt=True
+get_histogram=True
+runint=True
+runphys=True
+calc_npintensity(fname,inpath,outpath,ftype,calc_center,output_radius,fillhole,runfilt,get_histogram,runint,runphys)
     
-    parser.add_argument("fname", type=str, help="Name of file to analyze")
-    parser.add_argument("--ftype", type=str,default='dm3', help="File type of input data")
-    parser.add_argument("--inpath", type=str,default='./', help="File path of input data")
-    parser.add_argument("--outpath", type=str,default='./', help="File path for outputs")
-    parser.add_argument("--calc_center", action="store_true", help="Use Otsu filter to get center of particle")
-    parser.add_argument("--no-output_radius", action="store_false", dest="output_radius", help="Disable the radius output (default: enabled)")
-    parser.add_argument("--no-fillhole", action="store_false", dest="fillhole", help="Do not fill holes in the image (default: enabled)")
-    parser.add_argument("--no-runfilt", action="store_false", dest="runfilt", help="Do not use Gaussian filter on image (default: enabled)")
-    parser.add_argument("--no-get_histogram", action="store_false", dest="get_histogram", help="Do not get histogram of particle intensities (default: enabled)")
-    parser.add_argument("--no-runint", action="store_false", dest="runint", help="Do not get integrated intensity (default: enabled)")
-    parser.add_argument("--no-runphys", action="store_false", dest="runphys", help="Do not get physical radius (default: enabled)")
-
-    calc_npintensity(parser)
-    
-# Standard Python script execution check
-if __name__ == "__main__":
-    main()
